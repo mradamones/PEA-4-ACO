@@ -17,11 +17,11 @@ private:
     Ant** ants;
     int ant_num;
     int best_cost = INT_MAX;
-    float q_dens = 100.0;
-    float q_quan = 10.0;
+    float q_dens = 10.0;
+    float q_quan = 100.0;
     float ratio = 0.5;
-    int alpha;
-    int beta;
+    float alpha;
+    float beta;
     int vertices;
     bool pherom_type;
 

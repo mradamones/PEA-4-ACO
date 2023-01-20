@@ -78,45 +78,96 @@ int main() {
                 bool pheromType = true;
                 int solution_cost;
                 AntColony aco = AntColony();
-                for(float alpha: alphas) {
-                    for (float beta: betas) {
-                                double error_rate_avg = 0;
-                                int rep = 1;
-                                long long avg_time = 0;
-                                while(rep++ <= reps) {
-                                    auto start = std::chrono::high_resolution_clock::now();
-                                    solution_cost = aco.algorithm(vertices, distances,alpha, beta, pheromType);
-                                    auto stop = std::chrono::high_resolution_clock::now();
-                                    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
-                                    avg_time+=duration.count();
-                                    double error_rate = ((double) solution_cost - (double) best_cost)/(double) best_cost * 100;
-                                    if (solution_cost != best_cost) {
-                                        error_rate_avg += error_rate;
-                                    }
-                                    std::cout << "Cost: " << solution_cost << ". Error rate: " << error_rate << ". Vertices: " << vertices << std::endl;
+                if(vertices < 203) {
+                    for (float alpha: alphas) {
+                        for (float beta: betas) {
+                            double error_rate_avg = 0;
+                            int rep = 1;
+                            long long avg_time = 0;
+                            while (rep++ <= reps) {
+                                auto start = std::chrono::high_resolution_clock::now();
+                                solution_cost = aco.algorithm(vertices, distances, alpha, beta, pheromType);
+                                auto stop = std::chrono::high_resolution_clock::now();
+                                auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
+                                avg_time += duration.count();
+                                double error_rate =
+                                        ((double) solution_cost - (double) best_cost) / (double) best_cost * 100;
+                                if (solution_cost != best_cost) {
+                                    error_rate_avg += error_rate;
                                 }
-                                avg_time /= reps;
-                                error_rate_avg /= reps;
-                                file_out << avg_time << ";" << alphas << ";" << betas << ";" << "das;" << error_rate_avg << std::endl;
+                                std::cout << "Cost: " << solution_cost << ". Error rate: " << error_rate
+                                          << ". Vertices: " << vertices << std::endl;
+                            }
+                            avg_time /= reps;
+                            error_rate_avg /= reps;
+                            file_out << avg_time << ";" << alpha << ";" << beta << ";" << "das;" << error_rate_avg
+                                     << std::endl;
 
                             int rep2 = 1;
-                        long long avg_time2 = 0;
-                        while(rep2++ <= reps) {
-                            auto start = std::chrono::high_resolution_clock::now();
-                            solution_cost = aco.algorithm(vertices, distances,alpha, beta, !pheromType);
-                            auto stop = std::chrono::high_resolution_clock::now();
-                            auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
-                            avg_time2+=duration.count();
-                            double error_rate = ((double) solution_cost - (double) best_cost) / (double) best_cost * 100;
-                            if (solution_cost != best_cost) {
-                                error_rate_avg += error_rate;
+                            long long avg_time2 = 0;
+                            while (rep2++ <= reps) {
+                                auto start = std::chrono::high_resolution_clock::now();
+                                solution_cost = aco.algorithm(vertices, distances, alpha, beta, !pheromType);
+                                auto stop = std::chrono::high_resolution_clock::now();
+                                auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
+                                avg_time2 += duration.count();
+                                double error_rate =
+                                        ((double) solution_cost - (double) best_cost) / (double) best_cost * 100;
+                                if (solution_cost != best_cost) {
+                                    error_rate_avg += error_rate;
+                                }
+                                std::cout << "Cost: " << solution_cost << ". Error rate: " << error_rate
+                                          << ". Vertices: " << vertices << std::endl;
                             }
-                            std::cout << "Cost: " << solution_cost << ". Error rate: " << error_rate << ". Vertices: " << vertices << std::endl;
+                            avg_time2 /= reps;
+                            error_rate_avg /= reps;
+                            file_out << avg_time2 << ";" << alpha << ";" << beta << ";" << "qas;" << error_rate_avg << std::endl;
                         }
-                        avg_time2 /= reps;
-                        error_rate_avg /= reps;
-                        file_out << avg_time2 << ";" << alphas << ";" << betas << ";" << "qas;" << error_rate_avg << std::endl;
                     }
+                }
+                else
+                {
+                    double error_rate_avg = 0;
+                    int rep = 1;
+                    long long avg_time = 0;
+                    while (rep++ <= reps) {
+                        auto start = std::chrono::high_resolution_clock::now();
+                        solution_cost = aco.algorithm(vertices, distances, 1, 2, pheromType);
+                        auto stop = std::chrono::high_resolution_clock::now();
+                        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
+                        avg_time += duration.count();
+                        double error_rate =
+                                ((double) solution_cost - (double) best_cost) / (double) best_cost * 100;
+                        if (solution_cost != best_cost) {
+                            error_rate_avg += error_rate;
+                        }
+                        std::cout << "Cost: " << solution_cost << ". Error rate: " << error_rate
+                                  << ". Vertices: " << vertices << std::endl;
+                    }
+                    avg_time /= reps;
+                    error_rate_avg /= reps;
+                    file_out << avg_time << ";" << 1 << ";" << 2 << ";" << "das;" << error_rate_avg
+                             << std::endl;
+
+                    int rep2 = 1;
+                    long long avg_time2 = 0;
+                    while (rep2++ <= reps) {
+                        auto start = std::chrono::high_resolution_clock::now();
+                        solution_cost = aco.algorithm(vertices, distances, 1, 2, !pheromType);
+                        auto stop = std::chrono::high_resolution_clock::now();
+                        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
+                        avg_time2 += duration.count();
+                        double error_rate =
+                                ((double) solution_cost - (double) best_cost) / (double) best_cost * 100;
+                        if (solution_cost != best_cost) {
+                            error_rate_avg += error_rate;
+                        }
+                        std::cout << "Cost: " << solution_cost << ". Error rate: " << error_rate
+                                  << ". Vertices: " << vertices << std::endl;
+                    }
+                    avg_time2 /= reps;
+                    error_rate_avg /= reps;
+                    file_out << avg_time2 << ";" << 1 << ";" << 2 << ";" << "qas;" << error_rate_avg << std::endl;
                 }
             instance_file.close();
         }

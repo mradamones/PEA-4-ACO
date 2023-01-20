@@ -25,7 +25,7 @@ int AntColony::algorithm(int vert, int** dist, float a, float b, bool type){
         runAnts();
         auto stop = std::chrono::high_resolution_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::seconds>(stop - start).count();
-        if((stopCondition()&&i!=0) || i==max_iter || duration > 600.0)
+        if((stopCondition()&&i!=0) || i==max_iter || duration > 600)
             break;
         restartAnts();
         i++;
@@ -43,7 +43,6 @@ bool AntColony::stopCondition(){
 }
 
 void AntColony::initPheromones(){
-    int tau = calculateExpectedCost();
     float val = (float)vertices/(float)calculateExpectedCost();
     this->pheromones = new float*[vertices];
     for(int i = 0; i < vertices; ++i){
@@ -77,9 +76,7 @@ int AntColony::calculateExpectedCost(){
 
 void AntColony::initAnts(){
     this->ants = new Ant*[vertices];
-    for(int i = 0,j = 0; i < vertices; i++){
-        if(j == vertices)
-            j=0;
+    for(int i = 0; i < vertices; i++){
         Ant *ant = new Ant(0, vertices);
         ant->curCity = i;
         for(int from = 0;from < vertices;from++){
@@ -119,11 +116,8 @@ void AntColony::runAnts(){
         ants[i]->tourLength += distances[ants[i]->curCity][ants[i]->path[0]];
         ants[i]->curCity = ants[i]->path[0];
         ants[i]->path[vertices] = ants[i]->path[0];
-    }
-    for (int i=0;i<ant_num;i++) {
-        if (ants[i]->tourLength < best_cost) {
+        if (ants[i]->tourLength < best_cost)
             best_cost = ants[i]->tourLength;
-        }
     }
 }
 
@@ -148,9 +142,9 @@ float AntColony::calculateProb(int i,int j){
 }
 
 int AntColony::nextVert(int ant){
-    int i, j;
+    int j;
     double denominator = 0.0;
-    i = ants[ant]->curCity;
+    int i = ants[ant]->curCity;
     for(j=0;j<vertices;j++){
         if(ants[ant]->tabu[j] == 0){
             denominator+= calculateProb(i,j);
@@ -190,8 +184,8 @@ void AntColony::updatePheromones() {
         }
     }else{
         for(int i=0;i<ant_num;i++){
-            pheromones[ants[i]->prevCity][ants[i]->curCity] += (q_quan/distances[ants[i]->prevCity][ants[i]->curCity]);
-            pheromones[ants[i]->curCity][ants[i]->prevCity] += (q_quan/distances[ants[i]->prevCity][ants[i]->curCity]);
+            pheromones[ants[i]->prevCity][ants[i]->curCity] += (q_quan/(float)distances[ants[i]->prevCity][ants[i]->curCity]);
+            pheromones[ants[i]->curCity][ants[i]->prevCity] += (q_quan/(float)distances[ants[i]->prevCity][ants[i]->curCity]);
         }
     }
 }
